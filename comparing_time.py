@@ -36,14 +36,14 @@ def run_benchmarks(test_data):
     test_data.to_csv('pandas_data.csv', index=False)
     pandas_write_time = time.time() - start_time
     results['write_time'].append(pandas_write_time)
-    print(f"Pandas write time: {pandas_write_time}s")
+    print(f"Pandas write time: {pandas_write_time:.4f}s")
 
     # benchmark pandas reading
     start_time = time.time()
     pd.read_csv('pandas_data.csv')
     pandas_read_time = time.time() - start_time
     results['read_time'].append(pandas_read_time)
-    print(f"Pandas read time: {pandas_read_time}s")
+    print(f"Pandas read time: {pandas_read_time:.4f}s")
 
     # benchmark dask writing
     start_time = time.time()
@@ -51,7 +51,7 @@ def run_benchmarks(test_data):
     ddf.to_csv(os.path.join(dask_output_dir, 'part-*.csv'), index=False)
     dask_write_time = time.time() - start_time
     results['write_time'].append(dask_write_time)
-    print(f"Dask write time: {dask_write_time}s")
+    print(f"Dask write time: {dask_write_time:.4f}s")
 
     # benchmark dask reading
     start_time = time.time()
@@ -59,7 +59,7 @@ def run_benchmarks(test_data):
     len(ddf.compute())  # force computation
     dask_read_time = time.time() - start_time
     results['read_time'].append(dask_read_time)
-    print(f"Dask reading time: {dask_read_time}s")
+    print(f"Dask reading time: {dask_read_time:.4f}s")
 
     # benchmark polars writing
     start_time = time.time()
@@ -67,14 +67,14 @@ def run_benchmarks(test_data):
     pl_df.write_csv('polars_data.csv')
     polars_write_time = time.time() - start_time
     results['write_time'].append(polars_write_time)
-    print(f"Polars writing time: {polars_write_time}s")
+    print(f"Polars writing time: {polars_write_time:.4f}s")
 
     # benchmark polars reading
     start_time = time.time()
     pl.read_csv('polars_data.csv')
     polars_read_time = time.time() - start_time
     results['read_time'].append(polars_read_time)
-    print(f"Polars reading time: {polars_read_time}s")
+    print(f"Polars reading time: {polars_read_time:.4f}s")
 
     return results
 
@@ -83,7 +83,7 @@ def main():
     """Main function to run benchmark test"""
 
     # number of rows to generate
-    num_of_rows = 5000000
+    num_of_rows = 10000000  # 10 million
 
     # create test data
     print(f"Generating data with {num_of_rows} rows")
