@@ -6,6 +6,7 @@ import random
 import string
 import os
 import time
+import matplotlib.pyplot as plt
 
 
 def generate_test_data(rows):
@@ -81,6 +82,54 @@ def run_benchmarks(test_data):
     return results
 
 
+def visualize_results(results):
+    """Create visualizations of the benchmark results"""
+    
+    # create x position for plotting
+    x = np.arange(len(results['library']))
+
+    # writing performance chart
+    plt.figure(figsize=(10, 6))
+    plt.bar(x, results['write_time'], width=0.6)
+    plt.xlabel('Library')
+    plt.ylabel('Time(s)')
+    plt.title('Time each library takes to write to csv (Lower is better)')
+    plt.xticks(x, results['library'])
+    plt.grid(True, axis='y')
+    plt.tight_layout()
+    plt.savefig('csv_writing_performance.png')
+    print("\nSaved write performance chart to csv_writing_performance.png")
+
+    # reading performance chart
+    plt.figure(figsize=(10, 6))
+    plt.bar(x, results['read_time'], width=0.6, color='orange')
+    plt.xlabel('Library')
+    plt.ylabel('Time(s)')
+    plt.title('Time each library takes to read from csv (Lower is better)')
+    plt.xticks(x, results['library'])
+    plt.grid(True, axis='y')
+    plt.tight_layout()
+    plt.savefig('csv_reading_performance.png')
+    print("\nSaved read performance chart to csv_reading_performance.png")
+
+    # create a combined chart for comparison
+    plt.figure(figsize=(12, 7))
+    width = 0.35
+
+    plt.bar(x - width/2, results['write_time'], width, label='Write Time')
+    plt.bar(x - width/2, results['read_time'], width, label='Read Time')
+
+    plt.xlabel('Library')
+    plt.ylabel('Time(s)')
+    plt.title('CSV Reading and Writing erformance')
+    plt.xticks(x, results['library'])
+    plt.legend()
+    plt.grid(True, axis='y')
+    plt.tight_layout()
+    plt.savefig('csv_benchmark_combined.png')
+    print("\nSaved combined chart to csv_benchmark_combined.png")
+
+
 def save_results(results):
     """Save benchmark results to csv file and display them"""
     
@@ -90,7 +139,7 @@ def save_results(results):
         'Write Time(s)': results['write_time'],
         'Read Time(s)': results['read_time']
     })
-    print("\n Benchmark results:")
+    print("\nBenchmark results:")
     print(results_df)
     results_df.to_csv('benchmark_results.csv', index=False)
 
@@ -99,7 +148,7 @@ def main():
     """Main function to run benchmark test"""
 
     # number of rows to generate
-    num_of_rows = 2000000  # 5 million
+    num_of_rows = 10000000  # 10 million
 
     # create test data
     print(f"Generating data with {num_of_rows} rows")
@@ -109,6 +158,8 @@ def main():
     # run benchmarks
     results = run_benchmarks(test_data)
 
+    # save results
+    visualize_results(results)
     save_results(results)
 
 if __name__ == "__main__":
