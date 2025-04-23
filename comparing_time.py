@@ -9,6 +9,8 @@ import time
 
 
 def generate_test_data(rows):
+    """Generate random test data with specified number of rows"""
+
     return pd.DataFrame({
         'row_id': range(rows),
         'float_col': np.random.randn(rows),
@@ -79,11 +81,25 @@ def run_benchmarks(test_data):
     return results
 
 
+def save_results(results):
+    """Save benchmark results to csv file and display them"""
+    
+    # save results to a dataframe
+    results_df = pd.DataFrame({
+        'Library': results['library'],
+        'Write Time(s)': results['write_time'],
+        'Read Time(s)': results['read_time']
+    })
+    print("\n Benchmark results:")
+    print(results_df)
+    results_df.to_csv('benchmark_results.csv', index=False)
+
+
 def main():
     """Main function to run benchmark test"""
 
     # number of rows to generate
-    num_of_rows = 10000000  # 10 million
+    num_of_rows = 2000000  # 5 million
 
     # create test data
     print(f"Generating data with {num_of_rows} rows")
@@ -93,7 +109,7 @@ def main():
     # run benchmarks
     results = run_benchmarks(test_data)
 
-    print(results)
+    save_results(results)
 
 if __name__ == "__main__":
     main()
